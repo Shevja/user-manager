@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import UserManager from "@/components/UserManager/UserManager.vue";
 </script>
 
 <template>
-    <div>
-    </div>
+    <main>
+        <UserManager />
+    </main>
 </template>

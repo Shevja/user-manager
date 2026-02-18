@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@import "tailwindcss-primeui";
+
+@layer components {
+    body {
+        line-height: 1;
+    }
+
+    .custom-container {
+        @apply container mx-auto px-6;
+    }
+}
