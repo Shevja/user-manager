@@ -2,12 +2,12 @@
 import UserManagerButtons from "@/components/UserManager/UserManagerButtons.vue";
 import UserManagerTable from "@/components/UserManager/UserManagerTable.vue";
 import {useUserStore} from "@/store";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import type {User} from "@/types";
 
 const store = useUserStore()
-const selectedUser = ref<User | null>(null);
-const userDraft = ref({key: 1, name: 'Иван', age: 25, city: 'Новосибирск'})
+const selectedKey = ref<number | null>(null);
+const userDraft = ref<User | null>(null)
 
 const handleSave = () => {
     console.log('handleSave');
@@ -15,6 +15,8 @@ const handleSave = () => {
 
 const handleCancel = () => {
     console.log('handleCancel');
+
+    selectedKey.value = null;
 }
 
 const handleAdd = () => {
@@ -24,11 +26,19 @@ const handleAdd = () => {
 const handleDelete = () => {
     console.log('handleDelete');
 }
+
+watch(
+    selectedKey,
+    (newKey) => {
+        userDraft.value = newKey
+            ? store.getUserDraft(newKey)
+            : null
+    }
+)
 </script>
 
 <template>
     <section class="py-10">
-        {{ selectedUser }}
         <div class="custom-container">
             <UserManagerButtons
                 @onSave="handleSave"
@@ -37,7 +47,7 @@ const handleDelete = () => {
                 @onDelete="handleDelete"
             />
             <UserManagerTable
-                v-model:selected-item="selectedUser"
+                v-model:selected-key="selectedKey"
                 v-model:user-draft="userDraft"
                 :users="store.users"
             />

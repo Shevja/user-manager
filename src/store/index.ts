@@ -33,11 +33,18 @@ export const useUserStore = defineStore('user-manager', () => {
         users.value = users.value.filter(u => u.key !== user.key)
     }
 
+    function getUserDraft(key: number): User | null {
+        const user = users.value.find(u => u.key === key);
+        return user ? structuredClone(toRaw(user)) : null;
+    }
+
+
     return {
         users,
         userDraft,
         setUser,
         updateUser,
         deleteUser
+        deleteUser,
     }
 })
