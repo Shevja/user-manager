@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import {Button} from "primevue";
+import type {UserManagerButtonsEmits} from "@/components/UserManager/UserManagerButtons.types.ts";
 
-const emit = defineEmits<{
-    (e: 'onSave'): void,
-    (e: 'onCancel'): void,
-    (e: 'onAdd'): void,
-    (e: 'onDelete'): void,
-}>();
+const emit = defineEmits<UserManagerButtonsEmits>();
 </script>
 
 <template>
@@ -24,11 +20,13 @@ const emit = defineEmits<{
         <Button
             label="Добавить"
             outlined
+            severity="success"
             @click="emit('onAdd')"
         />
         <Button
             label="Удалить"
             outlined
+            severity="danger"
             @click="emit('onDelete')"
         />
     </div>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type {User} from "@/types";
+import type {UserManagerTableProps} from "@/components/UserManager/UserManagerTable.types.ts";
 import {
     Column,
     DataTable,
@@ -8,10 +9,6 @@ import {
     Checkbox,
     Select
 } from "primevue";
-
-interface UserManagerTableProps {
-    users: User[];
-}
 
 const props = defineProps<UserManagerTableProps>()
 
@@ -23,11 +20,6 @@ const cities = [
     {label: 'Москва', value: 'Москва'},
     {label: 'Санкт-Петербург', value: 'Санкт-Петербург'},
 ]
-
-const handleCheckboxChange = (checked: boolean, key: number): void => {
-    if (checked) selectedKey.value = key
-    else selectedKey.value = null
-}
 </script>
 
 <template>
@@ -38,40 +30,40 @@ const handleCheckboxChange = (checked: boolean, key: number): void => {
         data-key="key"
         paginator
     >
-        <Column header-style="width: 3rem">
+        <Column>
             <template #body="{ data }">
                 <Checkbox
                     :model-value="selectedKey === data.key"
                     :disabled="selectedKey !== null"
                     binary
-                    @update:model-value="(checked) => handleCheckboxChange(checked, data.key)"
+                    @update:model-value="(checked) => { selectedKey = checked ? data.key : null }"
                 />
             </template>
         </Column>
 
-        <Column field="name" header="Имя" header-class="w-[30%]">
+        <Column field="name" header="Имя" header-class="w-[32%]" body-class="p-0">
             <template #body="{ data }">
                 <div
                     v-if="data.key === selectedKey && userDraft"
-                    class="h-9 -my-4 -mx-[13px] lg:-mx-[13px]"
+                    class="m-[3px] h-full"
                 >
                     <InputText
                         v-model="userDraft.name"
                         placeholder="Введите имя"
-                        class="w-full h-full"
+                        class="w-full h-9"
                     />
                 </div>
-                <div v-else>
+                <div class="px-4 py-3" v-else>
                     {{ data.name }}
                 </div>
             </template>
         </Column>
 
-        <Column field="age" header="Возраст" class="w-[30%]">
+        <Column field="age" header="Возраст" class="w-[32%]" body-class="p-0">
             <template #body="{ data }">
                 <div
                     v-if="data.key === selectedKey && userDraft"
-                    class="h-9 -mx-[13px] -my-4"
+                    class="m-[3px] h-full"
                 >
                     <InputNumber
                         v-model="userDraft.age"
@@ -79,20 +71,20 @@ const handleCheckboxChange = (checked: boolean, key: number): void => {
                         :max="150"
                         placeholder="Введите возраст"
                         class="w-full h-full"
-                        input-class="w-[inherit]"
+                        input-class="w-[inherit] h-9"
                     />
                 </div>
-                <div v-else>
+                <div class="px-4 py-3" v-else>
                     {{ data.age }}
                 </div>
             </template>
         </Column>
 
-        <Column field="city" header="Город" class="w-[30%]">
+        <Column field="city" header="Город" class="w-[32%]" body-class="p-0">
             <template #body="{ data }">
                 <div
                     v-if="data.key === selectedKey && userDraft"
-                    class="h-9 -mx-[13px] -my-4"
+                    class="m-[3px] h-full"
                 >
                     <Select
                         v-model="userDraft.city"
@@ -100,10 +92,10 @@ const handleCheckboxChange = (checked: boolean, key: number): void => {
                         option-label="label"
                         option-value="value"
                         placeholder="Выберите город"
-                        class="w-full h-full"
+                        class="w-full h-9 flex items-center"
                     />
                 </div>
-                <div v-else>
+                <div class="px-4 py-3" v-else>
                     {{ data.city }}
                 </div>
             </template>
