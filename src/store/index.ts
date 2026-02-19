@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {ref} from "vue";
+import {ref, toRaw, watch} from "vue";
 import type {User} from "@/types";
 
 export const useUserStore = defineStore('user-manager', () => {
@@ -38,13 +38,19 @@ export const useUserStore = defineStore('user-manager', () => {
         return user ? structuredClone(toRaw(user)) : null;
     }
 
+    watch(
+        users,
+        (newUsers) => {
+            console.log('users обновился', newUsers);
+        }
+    )
 
     return {
         users,
         userDraft,
         setUser,
         updateUser,
-        deleteUser
         deleteUser,
+        getUserDraft,
     }
 })
