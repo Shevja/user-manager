@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {ref, toRaw} from "vue";
+import {computed, ref, toRaw} from "vue";
 import type {User} from "@/types";
 import {useSyncLocalStorage} from "@/composables/useLocalStorage.ts";
 
@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user-manager', () => {
     ])
     const draftUser = ref<User | null>(null);
     const selectedKey = ref<number | null>(null);
+    const isCreateMode = ref(false);
 
     const userCities = ref([
         {label: 'Новосибирск', value: 'Новосибирск'},
@@ -21,11 +22,10 @@ export const useUserStore = defineStore('user-manager', () => {
 
     // Базовые экшны (Сохранение, Обновление, Удаление)
     function saveUser(user: User) {
-        const newKey = users.value.length > 0
-            ? Math.max(...users.value.map(u => u.key)) + 1
-            : 1
+        const newKey = Date.now()
 
         users.value.push({...user, key: newKey});
+        isCreateMode.value = false;
         resetSelect()
     }
 
@@ -74,6 +74,7 @@ export const useUserStore = defineStore('user-manager', () => {
             city: '',
         } as User;
 
+        isCreateMode.value = true;
         draftUser.value = newDraftUser;
         selectedKey.value = newDraftUser.key;
     }
@@ -82,10 +83,23 @@ export const useUserStore = defineStore('user-manager', () => {
         draftUser.value = {...draftUser.value, ...newDraft};
     }
 
+    // Геттеры
+    const displayUsers = computed(() => {
+        const list = [...users.value]
+
+        // Добавляем шаблон пользователя в список
+        if (draftUser.value && isCreateMode.value) {
+            list.push(draftUser.value)
+        }
+
+        return list.reverse()
+    })
+
     return {
         users,
         draftUser,
         selectedKey,
+        isCreateMode,
         userCities,
         saveUser,
         updateUser,
@@ -93,6 +107,7 @@ export const useUserStore = defineStore('user-manager', () => {
         resetSelect,
         selectUser,
         createDraftUser,
-        updateDraftUser
+        updateDraftUser,
+        displayUsers
     }
 })

@@ -78,8 +78,6 @@ const selectedKey = defineModel<number | null>('selectedKey', {default: null})
                         placeholder="Введите возраст"
                         class="w-full h-full"
                         input-class="w-full h-9"
-                        :min="1"
-                        :max="150"
                         :invalid="!!props.draftErrors?.age"
                         @update:model-value="value => userDraft = {...userDraft, age: value} as User"
                     />

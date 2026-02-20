@@ -1,5 +1,6 @@
 export interface UserManagerButtonsProps {
     selectedKey: number | null;
+    isCreateMode: boolean;
 }
 
 export interface UserManagerButtonsEmits {

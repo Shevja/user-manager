@@ -7,11 +7,19 @@ export function useUserValidation(draft: Ref<User | null>) {
         if (!d) return {};
 
         return {
-            name: !d.name.trim() ? 'Поле не должно быть пустым' : '',
-            age: d.age === null ? 'Поле не должно быть пустым' : '',
-            city: !d.city ? 'Поле не должно быть пустым' : '',
+            name: d.name.trim() ? '' : 'Поле не должно быть пустым',
+            age: validateAge(d.age),
+            city: d.city ? '' : 'Поле не должно быть пустым',
         }
     })
+
+    function validateAge(age: number | null) {
+        if (!age) return 'Поле не должно быть пустым';
+        if (isNaN(age)) return 'Разрешены только числовые значения';
+        if (age < 18) return 'Возраст должен быть больше 18';
+        if (age > 100) return 'Возраст должен быть меньше 100';
+        return ''
+    }
 
     const isValid = computed(() => {
         return Object.values(errors.value).every(err => err === '')

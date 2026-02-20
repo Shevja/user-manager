@@ -24,17 +24,6 @@ const draftUser = computed({
 
 const userCities = computed(() => store.userCities)
 
-const tableUsers = computed(() => {
-    const users = [...store.users]
-
-    // Добавляем шаблон пользователя в список, но не в стор
-    if (store.draftUser && store.selectedKey === -1) {
-        users.push(store.draftUser)
-    }
-
-    return users.reverse()
-})
-
 const handleSave = () => {
     if (!store.draftUser || store.selectedKey === null) return;
 
@@ -48,7 +37,7 @@ const handleSave = () => {
         return
     }
 
-    store.selectedKey === -1
+    store.isCreateMode
         ? store.saveUser(store.draftUser)
         : store.updateUser(store.draftUser)
 }
@@ -78,12 +67,13 @@ const handleDelete = () => {
                 @onAdd="handleAdd"
                 @onDelete="handleDelete"
                 :selected-key="selectedKey"
+                :is-create-mode="store.isCreateMode"
             />
 
             <UserManagerTable
                 v-model:selected-key="selectedKey"
                 v-model:user-draft="draftUser"
-                :users="tableUsers"
+                :users="store.displayUsers"
                 :draft-errors="errors"
                 :user-cities="userCities"
             />
