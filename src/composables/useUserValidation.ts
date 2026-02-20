@@ -19,7 +19,7 @@ export function useUserValidation(draft: Ref<User | null>) {
 
     function validateName(name: string) {
         if (!name.trim()) return 'Поле не должно быть пустым'
-        if (/\d/.test(name)) return 'Поле не должно содержать цифры'
+        if (/[^\p{L}]/u.test(name)) return 'Поле не должно содержать цифры'
         return ''
     }
 
@@ -27,7 +27,7 @@ export function useUserValidation(draft: Ref<User | null>) {
         if (!age) return 'Поле не должно быть пустым';
         if (isNaN(age)) return 'Разрешены только числовые значения';
         if (age < 18) return 'Возраст должен быть больше 18';
-        if (age > 100) return 'Возраст должен быть меньше 100';
+        if (age > 200) return 'Возраст должен быть меньше 100';
         return ''
     }
 
