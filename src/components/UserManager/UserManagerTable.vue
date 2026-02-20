@@ -47,14 +47,18 @@ const cities = [
             <template #body="{ data }">
                 <div
                     v-if="data.key === selectedKey && userDraft"
-                    class="m-[3px] h-full"
+                    class="m-[3px] h-full relative"
                 >
                     <InputText
                         :model-value="userDraft.name"
-                        placeholder="Введите имя"
                         class="w-full h-9"
-                        @update:model-value="value => userDraft = {...data, name: value}"
+                        placeholder="Введите имя"
+                        :invalid="!!props.draftErrors?.name"
+                        @update:model-value="value => userDraft = {...userDraft, name: value} as User"
                     />
+                    <div class="text-red-600 text-xs/3.5">
+                        {{props.draftErrors.name}}
+                    </div>
                 </div>
                 <div class="px-4 py-3" v-else>
                     {{ data.name }}
@@ -70,13 +74,17 @@ const cities = [
                 >
                     <InputNumber
                         :model-value="userDraft.age"
-                        :min="1"
-                        :max="150"
                         placeholder="Введите возраст"
                         class="w-full h-full"
                         input-class="w-full h-9"
-                        @update:model-value="value => userDraft = {...data, age: value}"
+                        :min="1"
+                        :max="150"
+                        :invalid="!!props.draftErrors?.age"
+                        @update:model-value="value => userDraft = {...userDraft, age: value} as User"
                     />
+                    <div class="text-red-600 text-xs/3.5">
+                        {{props.draftErrors.age}}
+                    </div>
                 </div>
                 <div class="px-4 py-3" v-else>
                     {{ data.age }}
@@ -97,8 +105,12 @@ const cities = [
                         option-value="value"
                         placeholder="Выберите город"
                         class="w-full h-9 flex items-center"
-                        @update:model-value="value => userDraft = {...data, city: value}"
+                        :invalid="!!props.draftErrors.city"
+                        @update:model-value="value => userDraft = {...userDraft, city: value} as User"
                     />
+                    <div class="text-red-600 text-xs/3.5">
+                        {{props.draftErrors.city}}
+                    </div>
                 </div>
                 <div class="px-4 py-3" v-else>
                     {{ data.city }}

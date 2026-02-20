@@ -3,8 +3,10 @@ import UserManagerButtons from "@/components/UserManager/UserManagerButtons.vue"
 import UserManagerTable from "@/components/UserManager/UserManagerTable.vue";
 import {useUserStore} from "@/store";
 import {computed} from "vue";
+import {useUserValidation} from "@/composables/useUserValidation.ts";
 
 const store = useUserStore()
+const {errors, isValid} = useUserValidation(computed(() => store.draftUser))
 
 const selectedKey = computed({
     get: () => store.selectedKey,
@@ -14,7 +16,6 @@ const selectedKey = computed({
 const draftUser = computed({
     get: () => store.draftUser,
     set: (value) => {
-        console.log('сработал сеттер', value)
         if (value) store.updateDraftUser(value)
     }
 })
@@ -32,6 +33,8 @@ const tableUsers = computed(() => {
 
 const handleSave = () => {
     if (store.draftUser && store.selectedKey !== null) {
+        if (!isValid()) return
+
         store.selectedKey === -1
             ? store.saveUser(store.draftUser)
             : store.updateUser(store.draftUser)
@@ -68,6 +71,7 @@ const handleDelete = () => {
                 v-model:selected-key="selectedKey"
                 v-model:user-draft="draftUser"
                 :users="tableUsers"
+                :draft-errors="errors"
             />
 
         </div>
