@@ -10,12 +10,18 @@ export function useUserValidation(draft: Ref<User | null>) {
 
         return showErrors.value
             ? {
-                name: d.name.trim() ? '' : 'Поле не должно быть пустым',
+                name: validateName(d.name),
                 age: validateAge(d.age),
                 city: d.city ? '' : 'Поле не должно быть пустым',
             }
             : {}
     })
+
+    function validateName(name: string) {
+        if (!name.trim()) return 'Поле не должно быть пустым'
+        if (/\d/.test(name)) return 'Поле не должно содержать цифры'
+        return ''
+    }
 
     function validateAge(age: number | null) {
         if (!age) return 'Поле не должно быть пустым';
