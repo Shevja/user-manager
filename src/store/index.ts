@@ -1,18 +1,17 @@
 import {defineStore} from "pinia";
-import {ref, toRaw, watch} from "vue";
+import {ref, toRaw} from "vue";
 import type {User} from "@/types";
+import {useSyncLocalStorage} from "@/composables/useLocalStorage.ts";
 
 export const useUserStore = defineStore('user-manager', () => {
     const users = ref<User[]>([
         {key: 1, name: 'Иван', age: 25, city: 'Новосибирск'},
-        {key: 2, name: 'Андрей', age: 25, city: 'Новосибирск'},
-        {key: 3, name: 'Кирилл', age: 25, city: 'Новосибирск'},
-        {key: 4, name: 'Юрий', age: 25, city: 'Новосибирск'},
-        {key: 5, name: 'Вениамин', age: 25, city: 'Новосибирск'},
-        {key: 6, name: 'Инокентий', age: 25, city: 'Новосибирск'},
     ])
     const draftUser = ref<User | null>(null);
     const selectedKey = ref<number | null>(null);
+
+    // Синхронизируем users с localStorage
+    useSyncLocalStorage("user-manager-list", users);
 
     // Базовые экшны (Сохранение, Обновление, Удаление)
     function saveUser(user: User) {
@@ -76,14 +75,6 @@ export const useUserStore = defineStore('user-manager', () => {
     function updateDraftUser(newDraft: User) {
         draftUser.value = {...draftUser.value, ...newDraft};
     }
-
-    watch(
-        users,
-        (newUsers) => {
-            console.log('users обновился', newUsers);
-        },
-        {deep: true}
-    )
 
     return {
         users,
