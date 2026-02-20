@@ -14,12 +14,6 @@ const props = defineProps<UserManagerTableProps>()
 
 const userDraft = defineModel<User | null>('userDraft', {default: null})
 const selectedKey = defineModel<number | null>('selectedKey', {default: null})
-
-const cities = [
-    {label: 'Новосибирск', value: 'Новосибирск'},
-    {label: 'Москва', value: 'Москва'},
-    {label: 'Санкт-Петербург', value: 'Санкт-Петербург'},
-]
 </script>
 
 <template>
@@ -32,6 +26,13 @@ const cities = [
         showGridlines
         table-class="table-fixed min-w-xl"
     >
+        <template #empty>
+            <p class="w-full text-center">
+                Список пуст.
+                Нажмите кнопку "Добавить" чтобы добавить нового пользователя.
+            </p>
+        </template>
+
         <Column header-class="w-13" body-class="w-13">
             <template #body="{ data }">
                 <Checkbox
@@ -57,7 +58,7 @@ const cities = [
                         @update:model-value="value => userDraft = {...userDraft, name: value} as User"
                     />
                     <div class="text-red-600 text-xs/3.5">
-                        {{props.draftErrors.name}}
+                        {{ props.draftErrors.name }}
                     </div>
                 </div>
                 <div class="px-4 py-3" v-else>
@@ -83,7 +84,7 @@ const cities = [
                         @update:model-value="value => userDraft = {...userDraft, age: value} as User"
                     />
                     <div class="text-red-600 text-xs/3.5">
-                        {{props.draftErrors.age}}
+                        {{ props.draftErrors.age }}
                     </div>
                 </div>
                 <div class="px-4 py-3" v-else>
@@ -100,16 +101,16 @@ const cities = [
                 >
                     <Select
                         :model-value="userDraft.city"
-                        :options="cities"
+                        :options="props.userCities"
                         option-label="label"
                         option-value="value"
                         placeholder="Выберите город"
                         class="w-full h-9 flex items-center"
-                        :invalid="!!props.draftErrors.city"
+                        :invalid="!!props.draftErrors?.city"
                         @update:model-value="value => userDraft = {...userDraft, city: value} as User"
                     />
                     <div class="text-red-600 text-xs/3.5">
-                        {{props.draftErrors.city}}
+                        {{ props.draftErrors.city }}
                     </div>
                 </div>
                 <div class="px-4 py-3" v-else>

@@ -10,6 +10,12 @@ export const useUserStore = defineStore('user-manager', () => {
     const draftUser = ref<User | null>(null);
     const selectedKey = ref<number | null>(null);
 
+    const userCities = ref([
+        {label: 'Новосибирск', value: 'Новосибирск'},
+        {label: 'Москва', value: 'Москва'},
+        {label: 'Санкт-Петербург', value: 'Санкт-Петербург'},
+    ])
+
     // Синхронизируем users с localStorage
     useSyncLocalStorage("user-manager-list", users);
 
@@ -80,6 +86,7 @@ export const useUserStore = defineStore('user-manager', () => {
         users,
         draftUser,
         selectedKey,
+        userCities,
         saveUser,
         updateUser,
         deleteUser,

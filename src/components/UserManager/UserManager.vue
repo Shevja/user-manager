@@ -22,6 +22,8 @@ const draftUser = computed({
     }
 })
 
+const userCities = computed(() => store.userCities)
+
 const tableUsers = computed(() => {
     const users = [...store.users]
 
@@ -83,6 +85,7 @@ const handleDelete = () => {
                 v-model:user-draft="draftUser"
                 :users="tableUsers"
                 :draft-errors="errors"
+                :user-cities="userCities"
             />
 
         </div>
