@@ -13,28 +13,40 @@ const selectedKey = computed({
 
 const draftUser = computed({
     get: () => store.draftUser,
-    set: (value) => store.updateDraftUser(value)
+    set: (value) => {
+        console.log('сработал сеттер', value)
+        if (value) store.updateDraftUser(value)
+    }
+})
+
+const tableUsers = computed(() => {
+    const users = [...store.users]
+
+    // Добавляем шаблон пользователя в список, но не в стор
+    if (store.draftUser && store.selectedKey === -1) {
+        users.push(store.draftUser)
+    }
+
+    return users.reverse()
 })
 
 const handleSave = () => {
-    console.log('handleSave');
-    if (store.draftUser) {
-        store.updateUser(store.draftUser)
+    if (store.draftUser && store.selectedKey !== null) {
+        store.selectedKey === -1
+            ? store.saveUser(store.draftUser)
+            : store.updateUser(store.draftUser)
     }
 }
 
 const handleCancel = () => {
-    console.log('handleCancel');
-    store.resetSelection()
+    store.resetSelect()
 }
 
 const handleAdd = () => {
-    console.log('handleAdd');
-    store.createDraftUser() // TODO: дописать логику добавления, валидации и сохранения
+    store.createDraftUser()
 }
 
 const handleDelete = () => {
-    console.log('handleDelete');
     if (store.selectedKey !== null) {
         store.deleteUser(store.selectedKey)
     }
@@ -55,7 +67,7 @@ const handleDelete = () => {
             <UserManagerTable
                 v-model:selected-key="selectedKey"
                 v-model:user-draft="draftUser"
-                :users="store.users"
+                :users="tableUsers"
             />
 
         </div>

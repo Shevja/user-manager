@@ -20,7 +20,8 @@ export const useUserStore = defineStore('user-manager', () => {
             ? Math.max(...users.value.map(u => u.key)) + 1
             : 1
 
-        users.value.unshift({...user, key: newKey});
+        users.value.push({...user, key: newKey});
+        resetSelect()
     }
 
     function updateUser(updatedUser: User) {
@@ -29,56 +30,59 @@ export const useUserStore = defineStore('user-manager', () => {
         if (userIndex !== -1) {
             users.value[userIndex] = {...updatedUser}
         }
-
-        resetSelection()
+        resetSelect()
     }
 
     function deleteUser(key: number) {
         users.value = users.value.filter(u => u.key !== key)
-        resetSelection()
+
+        // Для универсальности, если удаление будет по другому ключу
+        if (selectedKey.value === key) resetSelect()
     }
 
     // Доп. экшны (Сброс выбора, Установка выбора, Создание/Обновление пустого шаблона)
-    function resetSelection() {
+    function resetSelect() {
         selectedKey.value = null
         draftUser.value = null
     }
 
     function selectUser(key: number | null) {
         if (key === null) {
-            resetSelection()
+            resetSelect()
             return;
         }
 
-        selectedKey.value = key
         const user = users.value.find(u => u.key === key);
-        draftUser.value = user ? structuredClone(toRaw(user)) : null;
+
+        if (user) {
+            selectedKey.value = key;
+            draftUser.value = structuredClone(toRaw(user));
+        }
     }
 
     // Создать шаблон для заполнения данных в списке
     function createDraftUser() {
-        const newDraftUser: User = {
+        const newDraftUser = {
             key: -1,
             age: null,
             name: '',
             city: '',
-        }
+        } as User;
 
-        users.value.unshift(newDraftUser);
         draftUser.value = newDraftUser;
         selectedKey.value = newDraftUser.key;
     }
 
-    function updateDraftUser(newDraft: User | null) {
-        if (!newDraft) return
-        draftUser.value = { ...draftUser.value, ...newDraft };
+    function updateDraftUser(newDraft: User) {
+        draftUser.value = {...draftUser.value, ...newDraft};
     }
 
     watch(
         users,
         (newUsers) => {
             console.log('users обновился', newUsers);
-        }
+        },
+        {deep: true}
     )
 
     return {
@@ -88,7 +92,7 @@ export const useUserStore = defineStore('user-manager', () => {
         saveUser,
         updateUser,
         deleteUser,
-        resetSelection,
+        resetSelect,
         selectUser,
         createDraftUser,
         updateDraftUser
