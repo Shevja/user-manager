@@ -48,7 +48,7 @@ const handleSave = () => {
 
     store.selectedKey === -1
         ? store.saveUser(store.draftUser)
-        : store.updateUser(store.draftUser
+        : store.updateUser(store.draftUser)
 }
 
 const handleCancel = () => {
@@ -87,5 +87,5 @@ const handleDelete = () => {
 
         </div>
     </section>
-    <Toast/>
+    <Toast position="bottom-center"/>
 </template>
