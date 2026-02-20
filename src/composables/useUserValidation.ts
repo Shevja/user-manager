@@ -1,16 +1,20 @@
 import type {User} from "@/types";
-import {computed, type Ref} from "vue";
+import {computed, ref, type Ref} from "vue";
 
 export function useUserValidation(draft: Ref<User | null>) {
+    const showErrors = ref(false);
+
     const errors = computed(() => {
         const d = draft.value;
         if (!d) return {};
 
-        return {
-            name: d.name.trim() ? '' : 'Поле не должно быть пустым',
-            age: validateAge(d.age),
-            city: d.city ? '' : 'Поле не должно быть пустым',
-        }
+        return showErrors.value
+            ? {
+                name: d.name.trim() ? '' : 'Поле не должно быть пустым',
+                age: validateAge(d.age),
+                city: d.city ? '' : 'Поле не должно быть пустым',
+            }
+            : {}
     })
 
     function validateAge(age: number | null) {
@@ -28,5 +32,6 @@ export function useUserValidation(draft: Ref<User | null>) {
     return {
         errors,
         isValid,
+        showErrors
     }
 }

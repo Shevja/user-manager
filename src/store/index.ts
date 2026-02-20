@@ -9,7 +9,6 @@ export const useUserStore = defineStore('user-manager', () => {
     ])
     const draftUser = ref<User | null>(null);
     const selectedKey = ref<number | null>(null);
-    const isCreateMode = ref(false);
 
     const userCities = ref([
         {label: 'Новосибирск', value: 'Новосибирск'},
@@ -25,7 +24,6 @@ export const useUserStore = defineStore('user-manager', () => {
         const newKey = Date.now()
 
         users.value.push({...user, key: newKey});
-        isCreateMode.value = false;
         resetSelect()
     }
 
@@ -74,7 +72,6 @@ export const useUserStore = defineStore('user-manager', () => {
             city: '',
         } as User;
 
-        isCreateMode.value = true;
         draftUser.value = newDraftUser;
         selectedKey.value = newDraftUser.key;
     }
@@ -93,6 +90,10 @@ export const useUserStore = defineStore('user-manager', () => {
         }
 
         return list.reverse()
+    })
+
+    const isCreateMode = computed(() => {
+        return selectedKey.value === -1;
     })
 
     return {

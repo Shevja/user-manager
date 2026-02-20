@@ -8,7 +8,7 @@ import {Toast, useToast} from "primevue";
 
 const store = useUserStore()
 const toast = useToast();
-const {errors, isValid} = useUserValidation(computed(() => store.draftUser))
+const {errors, isValid, showErrors} = useUserValidation(computed(() => store.draftUser))
 
 const selectedKey = computed({
     get: () => store.selectedKey,
@@ -27,6 +27,8 @@ const userCities = computed(() => store.userCities)
 const handleSave = () => {
     if (!store.draftUser || store.selectedKey === null) return;
 
+    showErrors.value = true
+
     if (!isValid.value) {
         toast.add({
             severity: "error",
@@ -36,6 +38,8 @@ const handleSave = () => {
         })
         return
     }
+
+    showErrors.value = false
 
     store.isCreateMode
         ? store.saveUser(store.draftUser)
