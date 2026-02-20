@@ -13,9 +13,9 @@ export function useUserValidation(draft: Ref<User | null>) {
         }
     })
 
-    function isValid() {
+    const isValid = computed(() => {
         return Object.values(errors.value).every(err => err === '')
-    }
+    })
 
     return {
         errors,

@@ -4,8 +4,10 @@ import UserManagerTable from "@/components/UserManager/UserManagerTable.vue";
 import {useUserStore} from "@/store";
 import {computed} from "vue";
 import {useUserValidation} from "@/composables/useUserValidation.ts";
+import {Toast, useToast} from "primevue";
 
 const store = useUserStore()
+const toast = useToast();
 const {errors, isValid} = useUserValidation(computed(() => store.draftUser))
 
 const selectedKey = computed({
@@ -32,13 +34,21 @@ const tableUsers = computed(() => {
 })
 
 const handleSave = () => {
-    if (store.draftUser && store.selectedKey !== null) {
-        if (!isValid()) return
+    if (!store.draftUser || store.selectedKey === null) return;
 
-        store.selectedKey === -1
-            ? store.saveUser(store.draftUser)
-            : store.updateUser(store.draftUser)
+    if (!isValid.value) {
+        toast.add({
+            severity: "error",
+            summary: "Ошибка сохранения",
+            detail: "Пожалуйста, проверьте правильность заполнения полей",
+            life: 3000,
+        })
+        return
     }
+
+    store.selectedKey === -1
+        ? store.saveUser(store.draftUser)
+        : store.updateUser(store.draftUser
 }
 
 const handleCancel = () => {
@@ -65,6 +75,7 @@ const handleDelete = () => {
                 @onCancel="handleCancel"
                 @onAdd="handleAdd"
                 @onDelete="handleDelete"
+                :selected-key="selectedKey"
             />
 
             <UserManagerTable
@@ -76,4 +87,5 @@ const handleDelete = () => {
 
         </div>
     </section>
+    <Toast/>
 </template>
