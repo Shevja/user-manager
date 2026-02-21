@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {computed, ref, toRaw} from "vue";
 import type {User} from "@/types";
-import {useSyncLocalStorage} from "@/composables/useLocalStorage.ts";
+import {useSyncLocalStorage} from "@/composables/useSyncLocalStorage.ts";
 
 export const useUserStore = defineStore('user-manager', () => {
     const users = ref<User[]>([
