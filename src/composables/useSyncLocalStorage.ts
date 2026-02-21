@@ -14,9 +14,13 @@ export function useSyncLocalStorage<T>(key: string, state: Ref<T>) {
     watch(
         state,
         (newValue) => {
-            const stateObj = toRaw(newValue)
-            localStorage.setItem(key, JSON.stringify(stateObj))
-            console.log("LS обновился")
+            try {
+                const stateObj = toRaw(newValue)
+                localStorage.setItem(key, JSON.stringify(stateObj))
+                console.log("LS обновился")
+            } catch (e) {
+                console.error("Ошибка записи в LocalStorage: ", e)
+            }
         },
         {deep: true}
     )
